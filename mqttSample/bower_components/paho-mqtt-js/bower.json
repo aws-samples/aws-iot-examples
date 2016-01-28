@@ -1,0 +1,22 @@
+{
+  "name": "paho-mqtt-js",
+  "version": "1.0.1",
+  "authors": [
+    "Stickman Ventures"
+  ],
+  "main": "mqttws31.js",
+  "keywords": [
+    "mqtt",
+    "paho",
+    "js"
+  ],
+  "license": "epl-v10",
+  "homepage": "http://git.eclipse.org/c/paho/org.eclipse.paho.mqtt.javascript.git/",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
