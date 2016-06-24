@@ -1,0 +1,143 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "AWSRolePolicy": {
+      "Type": "AWS::IAM::ManagedPolicy",
+      "Properties": {
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Action": [
+                "iot:connect",
+                "iot:publish",
+                "iot:subscribe",
+                "iot:createTopicRule",
+                "iot:getTopicRule",
+                "iot:DescribeEndpoint"
+              ],
+              "Resource": "*",
+              "Effect": "Allow"
+            },
+            {
+              "Action": [
+                "s3:getObject"
+              ],
+              "Resource": [
+                "arn:aws:s3:::iot-simulator-publicbucket/*",
+                {"Fn::Join": ["", ["arn:aws:s3:::", {"Ref": "S3BucketName"}, "/*"]]}
+              ],
+              "Effect": "Allow"
+            },
+            {
+              "Action": [
+                "iam:createPolicy",
+                "iam:createRole",
+                "iam:getRole",
+                "iam:attachRolePolicy",
+                "iam:PassRole"
+              ],
+              "Effect": "Allow",
+              "Resource": "*"
+            }
+          ]
+        }
+      }
+    },
+    "AWSLambdaRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "",
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        },
+        "ManagedPolicyArns": [
+          {
+            "Ref": "AWSRolePolicy"
+          }
+        ]
+      }
+    },
+    "AWSLambda": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "SrcCodeBucket"
+          },
+          "S3Key": "index.zip"
+        },
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "AWSLambdaRole",
+            "Arn"
+          ]
+        },
+        "Runtime": "nodejs4.3",
+        "Timeout": 60
+      }
+    },
+    "MyS3Bucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketName": {
+          "Ref": "S3BucketName"
+        }
+      }
+    },
+    "ElasticsearchDomain": {
+      "Type": "AWS::Elasticsearch::Domain",
+      "Properties": {
+        "ElasticsearchClusterConfig": {
+          "DedicatedMasterEnabled": "false",
+          "InstanceCount": "1",
+          "ZoneAwarenessEnabled": "false",
+          "InstanceType": "m3.medium.elasticsearch"
+        },
+        "EBSOptions": {
+          "EBSEnabled": false
+        },
+        "SnapshotOptions": {
+          "AutomatedSnapshotStartHour": "0"
+        },
+        "AccessPolicies": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "AWS": "*"
+              },
+              "Action": "es:*",
+              "Resource": "*"
+            }
+          ]
+        },
+        "AdvancedOptions": {
+          "rest.action.multi.allow_explicit_index": "true"
+        }
+      }
+    }
+  },
+  "Parameters": {
+    "S3BucketName": {
+      "Description": "Enter S3 bucket name you are about to create",
+      "Type": "String"
+    },
+    "SrcCodeBucket": {
+      "Description": "Enter the S3 bucket storing the source code",
+      "Type": "String",
+      "Default": "iot-simulator-publicbucket"
+    }
+  }
+}

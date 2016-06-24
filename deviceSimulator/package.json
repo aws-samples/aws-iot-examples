@@ -1,0 +1,17 @@
+{
+  "name": "iot-pub-simulator",
+  "version": "0.0.1",
+  "description": "AWS IoT simulator",
+  "main": "main.js",
+  "author": "Tingtao Xu <tingtaox@amazon.com>",
+  "license": "MIT",
+  "dependencies": {
+    "async": "^2.0.0-rc.4",
+    "aws-sdk": "^2.3.9",
+    "crypto-js": "^3.1.6",
+    "elasticsearch": "^11.0.1",
+    "moment": "^2.13.0",
+    "mqtt": "^1.7.4",
+    "websocket-stream": "^3.1.0"
+  }
+}
