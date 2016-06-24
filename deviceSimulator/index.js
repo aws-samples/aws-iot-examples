@@ -29,7 +29,7 @@ exports.handler = (event, context) => {
         return;
     }
     const s3 = new AWS.S3({
-      region: 'us-east-1'
+      region: 'us-west-2'
     });
 
     index_name = data.index;
