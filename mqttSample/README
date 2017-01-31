@@ -1,0 +1,1 @@
+Be sure to serve the files from a web service. Opening index.html from local file system will not work when establishing the WebSocket connection.
