@@ -1,1 +1,3 @@
 Be sure to serve the files from a web service. Opening index.html from local file system will not work when establishing the WebSocket connection.
+
+This example uses AWS IoT Device SDK for Node.js and from https://github.com/aws/aws-iot-device-sdk-js, which includes a script to make it browser-compatible and AWS SDK bundle which can be built here https://sdk.amazonaws.com/builder/js/ and only requires AWS.CognitoIdentity and AWS.Iot functionality.
